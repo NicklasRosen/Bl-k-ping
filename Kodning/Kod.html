@@ -19,14 +19,34 @@
 <body>
     <h1>Blåköpings To-Do´s</h1>
     
-    <!-- Todo-lista -->
-    <h2>Att göra-lista</h2>
-    <input type="text" id="todoInput" placeholder="Lägg till nytt todo">
-    <input type="date" id="deadlineInput"> <!-- Lägg till input för deadline -->
-    <button onclick="addTodo()">Lägg till</button>
-    <div id="todoContainer" class="todoColumn">
-        <!-- Todos kommer att läggas till här dynamiskt med JavaScript -->
-    </div>
+<!-- Todo-lista -->
+<h2>Att göra-lista</h2>
+<input type="text" id="todoInput" placeholder="Lägg till nytt todo">
+<textarea id="descriptionInput" placeholder="Beskrivning"></textarea> <!-- Nytt fält för beskrivning -->
+<input type="date" id="deadlineInput">
+<button onclick="addTodo()">Lägg till</button>
+<div id="todoContainer" class="todoColumn">
+    <!-- Todos kommer att läggas till här dynamiskt med JavaScript -->
+</div>
+
+function addTodo() {
+    var todoInput = document.getElementById("todoInput");
+    var descriptionInput = document.getElementById("descriptionInput"); // Nytt fält för beskrivning
+    var deadlineInput = document.getElementById("deadlineInput");
+
+    var todoContainer = document.getElementById("todoContainer");
+
+    var newTodo = document.createElement("div");
+    newTodo.className = "todoItem";
+    newTodo.innerHTML = "<h3>" + todoInput.value + "</h3>" +
+                        "<p>Beskrivning: " + descriptionInput.value + "</p>" + // Lägger till beskrivning
+                        "<p>Deadline: " + deadlineInput.value + "</p>";
+
+    todoContainer.appendChild(newTodo);
+
+
+
+
 
     <!-- Sökfunktion -->
     <h2>Sök todo:er</h2>
