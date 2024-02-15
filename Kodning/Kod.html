@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blåköping Kommun</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Länka till din CSS-fil -->
+    <style>
+        body {
+            background-size: contain; /* Anpassa bilden för att täcka hela fönstret */
+            background-repeat: round; /* Förhindra upprepning av bakgrundsbilden */
+            background-size: cover; /* Anpassa bilden för att täcka hela fönstret */
+            background-image: url('https://www.daks.me/img_flwr.gif');
+            background-origin: padding-box;
+            background-position: left top;
+        }
+    </style>
+</head>
+<body>
+    <h1>Blåköpings To-Do´s</h1>
+    
+    <!-- Todo-lista -->
+    <h2>Att göra-lista</h2>
+    <input type="text" id="todoInput" placeholder="Lägg till nytt todo">
+    <input type="date" id="deadlineInput"> <!-- Lägg till input för deadline -->
+    <button onclick="addTodo()">Lägg till</button>
+    <div id="todoContainer" class="todoColumn">
+        <!-- Todos kommer att läggas till här dynamiskt med JavaScript -->
+    </div>
+
+    <!-- Sökfunktion -->
+    <h2>Sök todo:er</h2>
+    <input type="text" id="searchInput" placeholder="Sök todo">
+    <input type="checkbox" id="caseSensitiveCheckbox"> Ta hänsyn till gemener/versaler
+    <button onclick="searchTodos()">Sök</button>
+
+    <!-- Nyheter -->
+    <h2>Nyheter</h2>
+    <p>Här är de senaste nyheterna om funktionalitet i systemet:</p>
+    <ul id="newsList">
+        <!-- Nyheter kommer att läggas till här dynamiskt med JavaScript -->
+    </ul>
+
+    <!-- Kontaktuppgifter till support -->
+    <h2>Kontaktuppgifter till support</h2>
+    <p>För support, vänligen kontakta: support@example.com</p>
+    <!-- Fyll på med fler vanliga frågor och svar här -->
+
+    <script>
+        let todos = [];
+        let todoCount = 0;
+        let columnCount = 1;
+
+        function addTodo() {
+            const todoInput = document.getElementById('todoInput');
+            const deadlineInput = document.getElementById('deadlineInput'); // Lägg till hämtning av deadline-input
+            const todoText = todoInput.value.trim();
+            const deadline = deadlineInput.value;
+
+            if (todoText !== '') {
+                todos.push({ title: todoText, deadline: deadline, completed: false }); // Lägg till deadline i objektet
+                displayTodos();
+                todoInput.value = '';
+                deadlineInput.value = ''; // Återställ deadline-input
+                todoCount++;
+
+                if (todoCount % 20 === 0) {
+                    createNewTodoColumn();
+                }
+            }
+        }
+
+        function displayTodos() {
+            const todoContainer = document.getElementById('todoContainer');
+            todoContainer.innerHTML = '';
+
+            let currentColumn = document.createElement('div');
+            currentColumn.classList.add('todoColumn');
+            todoContainer.appendChild(currentColumn);
+
+            let count = 0; // Lägg till räknare för att hålla reda på antalet todos i varje kolumn
+
+            todos.forEach((todo, index) => {
+                const todoItem = document.createElement('div');
+                todoItem.classList.add('todoItem'); // Lägg till klassen för fyrkantig ram
+                todoItem.textContent = `${todo.title} (Deadline: ${todo.deadline})`; // Visa även deadline
+                if (todo.completed) {
+                    todoItem.style.textDecoration = 'line-through';
+                }
+
+                const removeButton = document.createElement('button');
+                removeButton.textContent = 'Ta bort';
+                removeButton.onclick = () => removeTodo(index);
+
+                const completeButton = document.createElement('button');
+                completeButton.textContent = 'Klar';
+                completeButton.onclick = () => toggleComplete(index);
+
+                todoItem.appendChild(removeButton);
+                todoItem.appendChild(completeButton);
+
+                currentColumn.appendChild(todoItem);
+                count++;
+
+                if (count === 20) {
+                    const hr = document.createElement('hr');
+                    todoContainer.appendChild(hr);
+                    count = 0;
+                    currentColumn = document.createElement('div');
+                    currentColumn.classList.add('todoColumn');
+                    todoContainer.appendChild(currentColumn);
+                    columnCount++;
+                }
+            });
+        }
+
+        function removeTodo(index) {
+            todos.splice(index, 1);
+            todoCount--;
+            displayTodos();
+        }
+
+        function toggleComplete(index) {
+            todos[index].completed = !todos[index].completed;
+            displayTodos();
+        }
+
+        function searchTodos() {
+            const searchInput = document.getElementById('searchInput').value;
+            const caseSensitive = document.getElementById('caseSensitiveCheckbox').checked;
+
+            const filteredTodos = todos.filter(todo => {
+                const title = caseSensitive ? todo.title : todo.title.toLowerCase();
+                const searchTerm = caseSensitive ? searchInput : searchInput.toLowerCase();
+                return title.includes(searchTerm);
+            });
+
+            todos = filteredTodos;
+            displayTodos();
+        }
+
+        function createNewTodoColumn() {
+            columnCount++;
+        }
+
+        // Initiera todos och displayTodos vid start
+        displayTodos(); // Anropa displayTodos vid start
+    </script>
+    <h2>FAQ</h2>
+    <nav>
+        <ul>
+            <li><a href="index.html">Hur kan man sortera sina To-Do´s?</a></li>
+      
